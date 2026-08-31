@@ -9,6 +9,27 @@ function App() {
   return savedCart ? JSON.parse(savedCart) : []
 })
   const [warning, setWarning] = useState('')
+  const [showCheckout, setShowCheckout] = useState(false)
+
+  const savedCard = JSON.parse(
+  localStorage.getItem('savedCard')
+) || {}
+
+  const [cardholderName, setCardholderName] = useState(
+    savedCard.cardholderName || ''
+  )
+
+  const [cardNumber, setCardNumber] = useState(
+    savedCard.cardNumber || ''
+  )
+
+  const [expiration, setExpiration] = useState(
+    savedCard.expiration || ''
+  )
+
+  const [cvv, setCvv] = useState('')
+
+  const [cardMessage, setCardMessage] = useState('')
 
   useEffect(() => {
   localStorage.setItem('cart', JSON.stringify(cart))
@@ -121,6 +142,169 @@ const totalPrice = cart.reduce(
   (total, item) => total + item.price * item.quantity,
   0
 )
+
+function formatCardNumber(value) {
+  const numbersOnly = value.replace(/\D/g, '')
+  const limitedNumbers = numbersOnly.slice(0, 16)
+
+  return limitedNumbers.replace(/(.{4})/g, '$1 ').trim()
+}
+
+function formatExpiration(value) {
+  const numbersOnly = value.replace(/\D/g, '').slice(0, 4)
+
+  if (numbersOnly.length <= 2) {
+    return numbersOnly
+  }
+
+  return `${numbersOnly.slice(0, 2)}/${numbersOnly.slice(2)}`
+}
+
+function handleCardSubmit(event) {
+  event.preventDefault()
+
+  const cleanCardNumber = cardNumber.replace(/\s/g, '')
+
+  if (cardholderName.trim() === '') {
+    setCardMessage('Please enter the cardholder name.')
+    return
+  }
+
+  if (cleanCardNumber.length !== 16) {
+    setCardMessage('Card number must contain 16 digits.')
+    return
+  }
+
+  if (!/^\d{2}\/\d{2}$/.test(expiration)) {
+    setCardMessage('Expiration date must use MM/YY format.')
+    return
+  }
+
+const expirationMonth = Number(expiration.slice(0, 2))
+
+if (expirationMonth < 1 || expirationMonth > 12) {
+  setCardMessage('Please enter a valid expiration month.')
+  return
+}
+
+  if (cvv.length < 3) {
+    setCardMessage('CVV must contain at least 3 digits.')
+    return
+  }
+
+  const cardData = {
+    cardholderName,
+    cardNumber,
+    expiration,
+  }
+
+  localStorage.setItem('savedCard', JSON.stringify(cardData))
+
+  setCvv('')
+  setCardMessage('Card information saved successfully.')
+}
+
+if (showCheckout) {
+  return (
+    <div className="app">
+      <header>
+        <h1>EZTechMovie</h1>
+      </header>
+
+      <main>
+        <section className="checkout-section">
+          <h2>Checkout</h2>
+
+          <p>
+            Order Total: ${totalPrice.toFixed(2)}
+          </p>
+
+          <form
+            className="credit-card-form"
+            onSubmit={handleCardSubmit}
+          >
+            <label>
+              Cardholder Name
+              <input
+                type="text"
+                value={cardholderName}
+                onChange={(event) =>
+                  setCardholderName(event.target.value)
+                }
+                placeholder="John Smith"
+                required
+              />
+            </label>
+
+            <label>
+              Card Number
+              <input
+                type="text"
+                value={cardNumber}
+                onChange={(event) =>
+                  setCardNumber(
+                    formatCardNumber(event.target.value)
+                  )
+                }
+                placeholder="1234 5678 9012 3456"
+                maxLength="19"
+                required
+              />
+            </label>
+
+            <label>
+              Expiration Date
+              <input
+                type="text"
+                value={expiration}
+                onChange={(event) =>
+                  setExpiration(
+                    formatExpiration(event.target.value)
+                  )
+                }
+                placeholder="MM/YY"
+                maxLength="5"
+                required
+              />
+            </label>
+
+            <label>
+              CVV
+              <input
+                type="password"
+                value={cvv}
+                onChange={(event) =>
+                  setCvv(
+                    event.target.value
+                      .replace(/\D/g, '')
+                      .slice(0, 4)
+                  )
+                }
+                placeholder="123"
+                maxLength="4"
+                required
+              />
+            </label>
+
+            <button type="submit">
+              Save Card
+            </button>
+          </form>
+
+          {cardMessage && (
+            <p className="card-message">
+              {cardMessage}
+            </p>
+          )}
+
+          <button onClick={() => setShowCheckout(false)}>
+            Back to Cart
+          </button>
+        </section>
+      </main>
+    </div>
+  )
+}
  
   return (
     <div className="app">
@@ -201,6 +385,13 @@ const totalPrice = cart.reduce(
 
               <div className="cart-total">
                 <h3>Total: ${totalPrice.toFixed(2)}</h3>
+
+                <button
+                  className="checkout-button"
+                  onClick={() => setShowCheckout(true)}
+                >
+                  Checkout
+                </button>
               </div>
             </>
           )}
