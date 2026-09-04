@@ -5,9 +5,17 @@ body {
   color: white;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 .app {
   min-height: 100vh;
 }
+
+/* ------------------------------
+   HEADER / NAVIGATION
+------------------------------ */
 
 header {
   background-color: #1f1f1f;
@@ -15,6 +23,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 20px;
 }
 
 header h1 {
@@ -24,9 +33,43 @@ header h1 {
 
 nav {
   display: flex;
+  align-items: center;
   gap: 25px;
   font-weight: bold;
 }
+
+nav a {
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+nav a:hover {
+  color: #2ea3ff;
+}
+
+.user-name {
+  color: white;
+  font-weight: 600;
+}
+
+.logout-button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  background-color: #2ea3ff;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  opacity: 0.85;
+}
+
+/* ------------------------------
+   MAIN CONTENT
+------------------------------ */
 
 main {
   width: 90%;
@@ -41,6 +84,10 @@ main {
   border-radius: 6px;
   margin-bottom: 20px;
 }
+
+/* ------------------------------
+   PRODUCT CARDS
+------------------------------ */
 
 .product-grid {
   display: grid;
@@ -81,6 +128,10 @@ main {
   opacity: 0.85;
 }
 
+/* ------------------------------
+   SHOPPING CART
+------------------------------ */
+
 .cart-section {
   margin-top: 50px;
 }
@@ -90,7 +141,6 @@ main {
   padding: 15px;
   margin-bottom: 12px;
   border-radius: 8px;
-
   display: grid;
   grid-template-columns: 2fr 1fr 1fr auto;
   gap: 15px;
@@ -109,18 +159,17 @@ main {
   font-size: 1.2rem;
 }
 
-nav a {
-  color: white;
-  text-decoration: none;
+.checkout-button {
+  margin-top: 15px;
+  padding: 12px 22px;
+  font-size: 1rem;
+  font-weight: bold;
   cursor: pointer;
 }
 
-nav a:hover {
-  color: #2ea3ff;
-}
-html {
-  scroll-behavior: smooth;
-}
+/* ------------------------------
+   CHECKOUT PAGE
+------------------------------ */
 
 .checkout-section {
   max-width: 600px;
@@ -189,10 +238,102 @@ html {
   background-color: #2b2b2b;
 }
 
-.checkout-button {
-  margin-top: 15px;
-  padding: 12px 22px;
+/* ------------------------------
+   GOOGLE LOGIN PAGE
+------------------------------ */
+
+.login-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #111827, #1f2937);
+  padding: 20px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 500px;
+  padding: 45px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  text-align: center;
+  color: #111827;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+}
+
+.login-card h1 {
+  margin: 0 0 8px 0;
+  color: #111827;
+  font-size: 3rem;
+}
+
+.login-card h2 {
+  margin: 0 0 20px 0;
+  color: #111827;
+  font-size: 1.5rem;
+}
+
+.login-card p {
+  margin: 0 0 20px 0;
+  color: #4b5563;
   font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
+  line-height: 1.5;
+}
+
+#google-signin-button {
+  min-height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 25px auto;
+}
+
+.login-card .login-security-message {
+  margin-top: 20px;
+  margin-bottom: 0;
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+/* ------------------------------
+   GENERAL
+------------------------------ */
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ------------------------------
+   MOBILE RESPONSIVENESS
+------------------------------ */
+
+@media (max-width: 700px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  nav {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .cart-item {
+    grid-template-columns: 1fr;
+  }
+
+  .cart-total {
+    text-align: left;
+  }
+
+  .login-card {
+    padding: 30px 20px;
+  }
+
+  .login-card h1 {
+    font-size: 2.3rem;
+  }
 }
